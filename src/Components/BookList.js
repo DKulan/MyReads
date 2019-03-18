@@ -22,4 +22,4 @@ function BookList(props) {
     )
 }
 
-export default BookList;
+export default BookList

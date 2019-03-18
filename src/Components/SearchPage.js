@@ -21,13 +21,14 @@ class SearchPage extends React.Component {
 
 
     searchForBook(e) {
-        BooksAPI.search(e)
-            .then((books) => {
-                this.setState(() => ({
-                    searchedBooks: books
-                }));
-            });
-
+        if (e !== "") {
+            BooksAPI.search(e)
+                .then((books) => {
+                    this.setState(() => ({
+                        searchedBooks: books
+                    }));
+                });
+        }
     }
 
     render() {
@@ -66,8 +67,8 @@ class SearchPage extends React.Component {
                     </div>
                 </div>
             )}/>
-        );
+        )
     }
 };
 
-export default SearchPage;
+export default SearchPage
