@@ -1,23 +1,21 @@
 import React from 'react'
 import * as BooksAPI from '../utils/BooksAPI';
 import '../App.css'
-import PropTypes from 'prop-types';
+import BookList from './BookList';
 import SearchPage from './SearchPage';
-import CurrentlyReading from "./CurrentlyReading";
-import WantToRead from "./WantToRead";
-import Read from "./Read";
+
 import {Route, Link} from 'react-router-dom';
 
 class BooksApp extends React.Component {
-    static propTypes = {
-        books: PropTypes.array.isRequired
-    };
-
     state = {
         books: []
     };
 
     componentDidMount() {
+        this.getBooks();
+    }
+
+    getBooks() {
         BooksAPI.getAll()
             .then((books) => {
                 this.setState(() => ({
@@ -26,8 +24,11 @@ class BooksApp extends React.Component {
             });
     }
 
-    handleChange(e, book) {
-        BooksAPI.update(book, e.target.value);
+    handleChange = (book, e) => {
+        BooksAPI.update(book, e)
+            .then(() => {
+                this.getBooks()
+            })
     };
 
     render() {
@@ -40,15 +41,18 @@ class BooksApp extends React.Component {
                         </div>
                         <div className="list-books-content">
                             <div>
-                                <CurrentlyReading
+                                <BookList
                                     handleChange={this.handleChange}
-                                    books={this.state.books}/>
-                                <WantToRead
+                                    title="Currently Reading"
+                                    books={this.state.books.filter(book => book.shelf === "currentlyReading")}/>
+                                <BookList
                                     handleChange={this.handleChange}
-                                    books={this.state.books}/>
-                                <Read
+                                    title="Want to Read"
+                                    books={this.state.books.filter(book => book.shelf === "wantToRead")}/>
+                                <BookList
                                     handleChange={this.handleChange}
-                                    books={this.state.books}/>
+                                    title="Read"
+                                    books={this.state.books.filter(book => book.shelf === "read")}/>
                             </div>
                         </div>
                         <Link
@@ -58,7 +62,12 @@ class BooksApp extends React.Component {
                     </div>
                 )}
                 />
-                <Route path='/search' component={SearchPage}/>
+                <Route path='/search' render={({ history }) => (
+                    <SearchPage
+                        handleChange={this.handleChange}
+                    />
+                )}
+                />
             </div>
         )
     }
