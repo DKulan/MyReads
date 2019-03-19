@@ -1,39 +1,47 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 
-function Book(props) {
+class Book extends React.Component {
+    static propTypes = {
+        book: PropTypes.object.isRequired,
+        handleChange: PropTypes.func.isRequired
+    };
 
-    const { book } = props;
+    render() {
 
-    return (
-        <li>
-            <div className="book">
-                <div className="book-top">
-                    <div
-                        className="book-cover"
-                        style={{
-                            width: 128,
-                            height: 193,
-                            backgroundImage: `url(${book.imageLinks.thumbnail})`
-                        }}>
+        const {book, handleChange} = this.props;
+
+        return (
+            <li>
+                <div className="book">
+                    <div className="book-top">
+                        <div
+                            className="book-cover"
+                            style={{
+                                width: 128,
+                                height: 193,
+                                backgroundImage: `url(${book.imageLinks.thumbnail})`
+                            }}>
+                        </div>
+                        <div className="book-shelf-changer">
+                            <select onChange={e => {
+                                handleChange(book, e.target.value)
+                            }}>
+                                <option value="move" disabled selected>Move to...</option>
+                                <option value="currentlyReading">Currently Reading</option>
+                                <option value="wantToRead">Want to Read</option>
+                                <option value="read">Read</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
                     </div>
-                    <div className="book-shelf-changer">
-                        <select onChange={e => {
-                            props.handleChange(book, e.target.value)
-                        }}>
-                            <option value="move" disabled selected>Move to...</option>
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
-                            <option value="none">None</option>
-                        </select>
-                    </div>
+                    <div className="book-title">{book.title}</div>
+                    <div className="book-authors">{book.authors}</div>
                 </div>
-                <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.authors}</div>
-            </div>
-        </li>
-    )
+            </li>
+        )
+    }
 }
 
 export default Book
