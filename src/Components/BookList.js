@@ -19,6 +19,7 @@ class BookList extends React.Component {
                         {
                             this.props.books.map((book, key) => (
                                 <Book
+                                    key={key}
                                     handleChange={this.props.handleChange}
                                     book={book}
                                 />

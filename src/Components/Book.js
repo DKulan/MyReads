@@ -27,8 +27,10 @@ class Book extends React.Component {
                         <div className="book-shelf-changer">
                             <select onChange={e => {
                                 handleChange(book, e.target.value)
-                            }}>
-                                <option value="move" disabled selected>Move to...</option>
+                            }}
+                                value="move"
+                            >
+                                <option value="move" disabled>Move to...</option>
                                 <option value="currentlyReading">Currently Reading</option>
                                 <option value="wantToRead">Want to Read</option>
                                 <option value="read">Read</option>
