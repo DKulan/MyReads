@@ -16,7 +16,7 @@ class SearchPage extends React.Component {
     };
 
     searchForBook = (e) => {
-        this.state.query = e.trim();
+        this.setState({ query: e.trim() });
 
         BooksAPI.search(e.trim())
             .then((books) => {
@@ -24,7 +24,7 @@ class SearchPage extends React.Component {
                     this.setState(() => ({
                         searchedBooks: []
                     }));
-                } else if (e.trim() !== "") {
+                } else if (e.trim() !== "" && this.state.query === e) {
                     this.setState(() => ({
                         searchedBooks: this.shelfChecker(books)
                     }));
