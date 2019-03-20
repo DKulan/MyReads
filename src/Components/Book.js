@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import NoCover from '../assets/no_cover.jpg';
 
 
 class Book extends React.Component {
@@ -12,6 +13,12 @@ class Book extends React.Component {
 
         const {book, handleChange} = this.props;
 
+        let bookCover = NoCover;
+
+        if (book.imageLinks) {
+            bookCover = book.imageLinks.thumbnail;
+        }
+
         return (
             <li>
                 <div className="book">
@@ -21,14 +28,14 @@ class Book extends React.Component {
                             style={{
                                 width: 128,
                                 height: 193,
-                                backgroundImage: `url(${book.imageLinks.thumbnail})`
+                                backgroundImage: `url(${bookCover})`
                             }}>
                         </div>
                         <div className="book-shelf-changer">
                             <select onChange={e => {
                                 handleChange(book, e.target.value)
                             }}
-                                value="move"
+                                value={book.shelf}
                             >
                                 <option value="move" disabled>Move to...</option>
                                 <option value="currentlyReading">Currently Reading</option>

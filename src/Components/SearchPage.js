@@ -11,22 +11,41 @@ class SearchPage extends React.Component {
     };
 
     state = {
-        searchedBooks: []
+        searchedBooks: [],
+        query: ""
     };
 
     searchForBook = (e) => {
+        this.state.query = e.trim();
+
         BooksAPI.search(e.trim())
             .then((books) => {
-                if (e.trim() === "") {
+                if (e.trim() === "" || books.error) {
                     this.setState(() => ({
                         searchedBooks: []
                     }));
-                } else if (!books.error && e.trim() !== "") {
+                } else if (e.trim() !== "") {
                     this.setState(() => ({
-                        searchedBooks: books
-                    }))
+                        searchedBooks: this.shelfChecker(books)
+                    }));
                 }
             })
+    };
+
+    shelfChecker = (results) => {
+        const {books} = this.props;
+
+        const check = results.filter(result => books.find(b => {
+            if (b.id === result.id) {
+                result.shelf = b.shelf;
+                return result;
+            } else {
+                result.shelf = "none";
+            }
+        }));
+
+        books.concat(check);
+        return results;
     };
 
     render() {
@@ -54,12 +73,14 @@ class SearchPage extends React.Component {
                     <div className="search-books-results">
                         <ol className="books-grid">
                             {
-                                this.state.searchedBooks.map(book => (
-                                    <Book
-                                        handleChange={this.props.handleChange}
-                                        book={book}
-                                    />
-                                ))
+                                this.state.searchedBooks.map(book => {
+                                    return (
+                                        < Book
+                                            handleChange={this.props.handleChange}
+                                            book={book}
+                                        />
+                                    )
+                                })
                             }
                         </ol>
                     </div>
